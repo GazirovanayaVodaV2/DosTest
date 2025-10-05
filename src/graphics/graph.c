@@ -420,7 +420,7 @@ vram create_vram() {
 }
 
 double_buffer *new_double_buffer(byte video_mode) {
-	double_buffer *db = new (double_buffer);
+	double_buffer *db = new(double_buffer);
 
 	if (db == NULL) {
 		print_error(("Double buffer allocation error!"), MEMORY_ALLOCATION_ERROR);
@@ -503,7 +503,7 @@ image *new_image(const char *path) {
 
 	if (img_file != NULL) {
 
-		image *img = new (image);
+		image *img = new(image);
 
 		if (img == NULL) {
 			fclose(img_file);
@@ -581,7 +581,7 @@ void draw_image(double_buffer *db, image *img, s16 x, s16 y) {
 
 
 atlas *new_atlas(byte size) {
-	atlas *this = new (atlas);
+	atlas *this = new(atlas);
 
 	this->size = size;
 
@@ -607,7 +607,7 @@ image *atlas_get(atlas *this, size_t i) {
 }
 
 animation_key *new_animation_key(size_t i, float time) {
-	animation_key *this = new (animation_key);
+	animation_key *this = new(animation_key);
 	if (this == NULL) {
 		print_error(("Animation key allocation error!"), MEMORY_ALLOCATION_ERROR);
 		return this;
@@ -628,7 +628,7 @@ void free_animation_key(animation_key *this) {
 }
 
 animation *new_animation() {
-	animation *this = new (animation);
+	animation *this = new(animation);
 	if (this == NULL) {
 		print_error(("Animation allocation error!"), MEMORY_ALLOCATION_ERROR);
 		return this;
@@ -653,7 +653,7 @@ void push_animation_key(animation *this, animation_key *key) {
 }
 
 animation_player *new_animation_player() {
-	animation_player *this = new (animation_player);
+	animation_player *this = new(animation_player);
 	if (this == NULL) {
 		print_error(("Animation player allocation error!"), MEMORY_ALLOCATION_ERROR);
 		return this;
@@ -676,12 +676,12 @@ size_t play_animation(animation_player *this, size_t an_index, float fps) {
 	animation *current_animation = array_get(this->animations, an_index);
 
 	animation_key *current_key = array_get(current_animation->keys, current_animation->current_frame);
-	u16 need_frames = (u16) roundf(current_key->time * fps);
+	s32 need_frames = roundf(current_key->time * fps);
 
-	current_animation->frame_counter++;
+	++current_animation->frame_counter;
 	if (current_animation->frame_counter > need_frames) {
 		current_animation->frame_counter = 0;
-		current_animation->current_frame++;
+		++current_animation->current_frame;
 
 		if (current_animation->current_frame > (current_animation->keys->size - 1)) {
 			current_animation->current_frame = 0;
@@ -696,7 +696,7 @@ font *new_font(const char *path) {
 	FILE *font_file = fopen(path, "rb");
 	if (font_file != NULL) {
 
-		font *this = new (font);
+		font *this = new(font);
 		if (this == NULL) {
 			fclose(font_file);
 			print_error(("Font allocation error"), MEMORY_ALLOCATION_ERROR);

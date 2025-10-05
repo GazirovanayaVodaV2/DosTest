@@ -22,6 +22,7 @@
 #include "game_logic/assets.h"
 
 int main(void) {
+
 	atlas *global_atlas = load_assets(0x55);
 
 
@@ -45,7 +46,7 @@ int main(void) {
 	push_sprite_to_animated_game_object(player.sprite, new_image("assets/plr2.vga"));
 	push_sprite_to_animated_game_object(player.sprite, new_image("assets/plr3.vga"));
 	animation *player_idle = new_animation();
-	push_animation_key(player_idle, new_animation_key(0, 1.0f));
+	push_animation_key(player_idle, new_animation_key(0, 0.1f));
 
 	animation *player_move = new_animation();
 	push_animation_key(player_move, new_animation_key(1, 0.5f));
@@ -62,39 +63,48 @@ int main(void) {
 	fps_counter fps = create_fps_counter();
 
 	char key = 0;
+
 	while (key != 27) {
+
 
 		if (kbhit()) {
 			key = getkey();
 		} else {
 			key = 0;
+
+			player.sprite->current_animation = 0;
 		}
+
 
 		switch (key) {
 			case ('w'): {
-				vec2_move_onF(player_pos, 0, -player_speed);
+				//player.speed = create_vec2(0, -player_speed);
 				player.sprite->current_animation = 1;
 			} break;
 			case ('s'): {
-				vec2_move_onF(player_pos, 0, player_speed);
+				//player.speed = create_vec2(0, player_speed);
 				player.sprite->current_animation = 1;
 			} break;
 			case ('a'): {
-				vec2_move_onF(player_pos, -player_speed, 0);
+				player.speed.x = -player_speed;
 				player.sprite->current_animation = 1;
 			} break;
 			case ('d'): {
-				vec2_move_onF(player_pos, player_speed, 0);
+				player.speed.x = player_speed;
 				player.sprite->current_animation = 1;
 			} break;
 			default: {
-				player.sprite->current_animation = 0;
+
 			} break;
 		}
+
 		clear_double_buffer(db);
+
+		update_entity(&player, test_lvs);
 
 		update_and_draw_level(db, test_lvs, global_atlas);
 		draw_animated_game_object(player.sprite, db, fps.fps);
+
 
 		char fps_str[4];
 		itoa((int) roundf(fps.fps > 999 ? 999 : fps.fps),

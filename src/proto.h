@@ -36,3 +36,10 @@ typedef void (*destructor)(void *element);
 
 
 #define new(TYPE) malloc(sizeof(TYPE))
+
+enum SIDE {
+	LEFT = 0x0001,
+	RIGHT = 0x0010,
+	TOP = 0x0100,
+	BOTTOM = 0x1000
+};

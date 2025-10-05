@@ -18,7 +18,7 @@
             "type": "node-terminal",
             "name": "DOS run target",
             "request": "launch",
-            "command": "cmake --build build && ${userHome}/.dos/dosbox-x/dosbox-x -conf ${userHome}/.dos/dosbox-x.conf -fastlaunch -exit ${command:cmake.getLaunchTargetPath}.exe && exit",
+            "command": "cmake -B /build --build /build && ${userHome}/.dos/dosbox-x/dosbox-x -conf ${userHome}/.dos/dosbox-x.conf -fastlaunch -showcycles -exit ${command:cmake.getLaunchTargetPath}.exe && exit",
             "windows": {
                 "name": "DOS run target",
                 "type": "node-terminal",

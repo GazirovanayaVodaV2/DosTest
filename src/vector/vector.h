@@ -9,12 +9,15 @@ typedef struct vec2 {
 	float y;
 } vec2;
 
-vec2 create_vec2(float x, float y);
-vec2 summ_vec2(vec2 a, vec2 b);
-vec2 sub_vec2(vec2 a, vec2 b);
-float vec2_sqr_len(vec2 a);
-float vec2_len(vec2 a);
-float vec2_scalar(vec2 a, vec2 b);
+#define create_vec2(x, y) \
+	(vec2) { x, y }
+#define summ_vec2(a, b) \
+	(vec2) { a.x + b.x, a.y + b.y }
+#define sub_vec2(a, b) \
+	(vec2) { a.x - b.x, a.y - b.y }
+#define vec2_sqr_len(a) (a.x * a.x + a.y * a.y)
+#define vec2_len(a) (sqrtf(vec2_sqr_len(a)))
+#define vec2_scalar(a, b) (a.x * b.x + a.y * b.y)
 
 void vec2_move_to(vec2 *this, vec2 a);
 void vec2_move_toF(vec2 *this, float x, float y);
@@ -29,12 +32,15 @@ typedef struct vec3 {
 	float z;
 } vec3;
 
-vec3 create_vec3(float x, float y, float z);
-vec3 summ_vec3(vec3 a, vec3 b);
-vec3 sub_vec3(vec3 a, vec3 b);
-float vec3_sqr_len(vec3 a);
-float vec3_len(vec3 a);
-float vec3_scalar(vec3 a, vec3 b);
+#define create_vec3(x, y, z) \
+	(vec3) { x, y, z }
+#define summ_vec3(a, b) \
+	(vec3) { a.x + b.x, a.y + b.y, a.z + b.z }
+#define sub_vec3(a, b) \
+	(vec3) { a.x - b.x, a.y - b.y, a.z - b.z }
+#define vec3_sqr_len(a) (a.x * a.x + a.y * a.y + a.z * a.z)
+#define vec3_len(a) (sqrtf(vec3_sqr_len(a)))
+#define vec3_scalar(a, b) (a.x * b.x + a.y * b.y + a.z * b.z)
 
 void vec3_move_to(vec3 *this, vec3 a);
 void vec3_move_toF(vec3 *this, float x, float y, float z);
@@ -42,16 +48,20 @@ void vec3_move_toF(vec3 *this, float x, float y, float z);
 void vec3_move_on(vec3 *this, vec3 a);
 void vec3_move_onF(vec3 *this, float x, float y, float z);
 
-vec3 vec2_to_vec3(vec2 vec);
+#define vec2_to_vec3(vec) create_vec3(vec.x, vec.y, 0.0f)
 
 //size 16 bytes
 typedef struct rect {
 	float x, y, w, h;
 } rect;
 
-rect create_rect(float x, float y, float w, float h);
-rect create_rect_from_vec2(vec2 start, vec2 size);
+#define create_rect(x, y, w, h) \
+	(rect) { x, y, w, h }
+#define create_rect_from_vec2(start, size) \
+	(rect) { start.x, start.y, size.x, size.y }
 
-bool check_collision(const rect pos1, const rect pos2);
+inline bool check_collision(const rect pos1, const rect pos2) {
+	return ((pos1.x + pos1.w) > pos2.x) && (pos1.x < (pos2.x + pos2.w)) && ((pos1.y + pos2.h) > pos2.y) && (pos1.y < (pos2.y + pos2.h));
+}
 
 #endif

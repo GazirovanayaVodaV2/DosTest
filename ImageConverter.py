@@ -412,10 +412,11 @@ options = {
 	'output_name':'original',
 	'output_format':'vga',
 	'output_size':'original',
-	'all_files_in_dir':False
+	'all_files_in_dir':False,
+	'convert_to_header':False
 }
 
-ignore_formats = ['bit', 'vga']
+ignore_formats = ['bit', 'vga', 'h']
 
 def read_args(_args):
 	args = _args[1:]
@@ -434,6 +435,9 @@ def read_args(_args):
 					options['output_size'] = size
 				case "a":
 					options['all_files_in_dir'] = True
+				case "h":
+					options['convert_to_header'] = True
+
 
 
 def gen_file(path, dir = ''):
@@ -462,7 +466,6 @@ def gen_file(path, dir = ''):
 
 	file_format = options['output_format']
 
-
 	if options['all_files_in_dir']:
 		match img_format:
 			case 'png':
@@ -472,7 +475,7 @@ def gen_file(path, dir = ''):
 			case 'bmp':
 				file_format = 'bit'
 
-	out_name += '.' + file_format
+	
 
 	match file_format:
 		case 'vga':
@@ -480,8 +483,29 @@ def gen_file(path, dir = ''):
 		case 'bit':
 			res = get_bits(img)
 	
+	if (options['convert_to_header']):
+		file_format = 'h'
+
+		var_name = 'sprite_'+out_name
+
+		data_str = f"{res}"
+		data_str = data_str.replace("[", "{")
+		data_str = data_str.replace("]", "}")
+
+		file_content = f"#ifndef {var_name.upper()}\n"
+		file_content += f"#define {var_name.upper()}\n"
+		file_content += f'unsigned char {var_name}[] = {data_str};\n'
+		file_content += '#endif'
+
+		res = file_content
+
+	out_name += '.' + file_format
+
+	if (options['convert_to_header']):
+		out_name = "sprite_" + out_name
+
 	file = open(out_name, 'wb')
-	file.write(bytes(res))
+	file.write(bytes(res, encoding='utf-8'))
 	file.close()
 					 
 """

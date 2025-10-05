@@ -1,9 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stddef.h>
 #include "../graphics/graph.h"
 #include "../vector/vector.h"
-#include <stddef.h>
+#include "levels.h"
 
 typedef struct static_game_object {
 	vec2 pos;
@@ -24,7 +25,7 @@ typedef struct animated_game_object {
 
 animated_game_object *new_animated_game_object(vec2 pos);
 void free_animated_game_object(animated_game_object *this);
-void draw_animated_game_object(animated_game_object *this, double_buffer *db, float fps);
+size_t draw_animated_game_object(animated_game_object *this, double_buffer *db, float fps);
 
 void push_sprite_to_animated_game_object(animated_game_object *this, image *sprite);
 void push_animation_to_animated_game_object(animated_game_object *this, animation *anims);
@@ -32,6 +33,15 @@ void push_animation_to_animated_game_object(animated_game_object *this, animatio
 typedef struct base_entity {
 	animated_game_object *sprite;
 	s16 hp;
+
+	vec2 pos, speed;
+
+	bool can_move_left;
+	bool can_move_right;
+	bool can_move_up;
+	bool can_move_down;
 } base_entity;
+
+void update_entity(base_entity *this, level *lvl);
 
 #endif

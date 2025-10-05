@@ -29,6 +29,7 @@ static const char *levels[][LEVEL_MAX_HEIGTH] = {
 		 "WWWWWWWWWW\n"}};
 
 typedef struct level {
+	size_t id;
 	byte goal;
 	array *static_objects;
 	array *animated_objects;
@@ -36,11 +37,17 @@ typedef struct level {
 	array *enemies;
 	vec2 player_spawn_point;
 	u16 w, h;
+	byte sprite_size;
 } level;
 
 level *load_level(size_t _i);
 void unload_level(level *this);
 void update_and_draw_level(double_buffer *db, level *this, atlas *global_atlas);
+
+char get_level_objectC(vec2 pos, level *this);
+
+//shitty code, but its C :(
+u16 handle_object_collision(rect obj, level *this);
 
 
 #endif
